@@ -12,7 +12,7 @@ by marcuz-apl | 10 November 2025
 
 [Prepare the problematic SATA disk](#Prepare-the-problematic-SATA-disk)
 
-[Copy the OS+Data Partition](#Copy-the-OS+Data-Partition)
+[Copy the OS-Data Partition](#Copy-the-OS-Data-Partition)
 
 [Create the GRUB2 bootloader](#Create-the-GRUB2-bootloader)
 
@@ -57,7 +57,7 @@ Run your VMware Workstations as Administrator; then add the Physical Disk (the w
 
 Once booted into the Ubuntu 25.10 with macOS flavor, the desktop is a as below:
 
-![desktop](.\assets\img-01-sda-desktop.png)
+![desktop](./assets/img-01-sda-desktop.png)
 
 Also the view of `/dev/sdb` on `GParted` app tells corruption.
 
@@ -86,7 +86,7 @@ lsblk
 
 Here is the snapshot:
 
-![initial sda n sdb](.\assets\img-03-initial-sda-n-sdb.png)
+![initial sda n sdb](./assets/img-03-initial-sda-n-sdb.png)
 
 
 
@@ -166,7 +166,7 @@ lsblk
 
 The `/dev/sdb` shall be in good standing now:
 
-![sdb in good standing](.\assets\img-04-sdb-view-after-partitioning-with-gparted.png)
+![sdb in good standing](./assets/img-04-sdb-view-after-partitioning-with-gparted.png)
 
 Then format the partitions:
 
@@ -179,11 +179,11 @@ sudo mkfs.fat -F 32 /dev/sdb3    ## This takes a while as it's a 1.3TB partition
 
 The operations above can be viewed in a snapshot as below:
 
-![ops summary](.\assets\img-05-sdb-ops-summary.png)
+![ops summary](./assets/img-05-sdb-ops-summary.png)
 
 
 
-## Copy the OS+Data Partition
+## Copy the OS-Data Partition
 
 Assuming the OS and Data are all installed at the root filesystem (`/`) at `/dev/sdb2`. If not on one partition, so the same for other partitions.
 
