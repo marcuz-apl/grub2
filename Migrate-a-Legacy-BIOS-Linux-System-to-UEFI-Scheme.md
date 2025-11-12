@@ -1,4 +1,4 @@
-# Migrate a Legacy BIOS Linux system to UEFI System
+# Migrate a Legacy BIOS Linux System to UEFI Scheme
 
 by marcuz-apl | 24 October 2025
 
