@@ -1,4 +1,4 @@
-# How to rescue or reinstall GRUB
+# How to Rescue or Reinstall GRUB - the Manual Way
 
 by Drew Howden Tech
 

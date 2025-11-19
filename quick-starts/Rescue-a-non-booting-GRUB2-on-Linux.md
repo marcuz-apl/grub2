@@ -35,7 +35,7 @@ If you are practicing on a functioning system, press C when your GRUB boot menu 
 The next few commands work with both `grub>` and `grub rescue>`. The first command you should run invokes the pager, for paging long command outputs:
 
 ```
-grub> set pager=1
+grub> set page=1
 ```
 
 There must be no spaces on either side of the equals sign. Now let’s do a little exploring. Type `ls` to list all partitions that GRUB sees:

@@ -34,11 +34,9 @@ Case 2: **[Install Ubuntu 25.10 via Partition Cloning](./Install-Ubuntu-25.10-vi
 
 2- **[Use GRUB2 command line to boot up](./quick-starts/Use-GRUB2-command-line -to-boot-up.md)**
 
+3- **[How to Rescue or Reinstall Grub - the Manual Way](./quick-starts/How-to-Rescue-or-Reinstall-GRUB-the-Manual-Way.md)**
 
-
-## GRUB2 - Toolset
-
-1- [Fix Ubuntu Not Booting Issue with Boot Repair tool](./quick-starts/Fix-Ubuntu-Not-Booting-with-Boot-Repair.md)
+4- **[Fix Ubuntu Not Booting Issue with Boot Repair tool](./quick-starts/Fix-Ubuntu-Not-Booting-with-Boot-Repair.md)**
 
 
 
