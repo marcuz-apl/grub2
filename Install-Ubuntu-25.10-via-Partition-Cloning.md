@@ -1,4 +1,4 @@
-# Install Ubuntu 25.10 via Partition Cloning
+# Install Ubuntu 24.04 via Partition Cloning
 
 by marcuz-apl | 10 November 2025
 
@@ -24,11 +24,11 @@ by marcuz-apl | 10 November 2025
 
 ## Case Profile
 
-I have installed a Ubuntu 25.10 system into VMware VM, which I've customized quite a bit, even with a macOS flavor desktop (crazy, am I?), running very well with quite a few projects. Since I have acquired quite some experience of grub2 operations, I would like to clone such Ubuntu 25.10 from the VMware to the Physical SATA Disk which is big-sized at 1.8TB.
+I have installed a Ubuntu 24.04 system into VMware VM, which I've customized quite a bit, even with a macOS flavor desktop (crazy, am I?), running very well with quite a few projects. Since I have acquired quite some experience of grub2 operations, I would like to clone such Ubuntu 24.04 from the VMware to the Physical SATA Disk which is big-sized at 1.8TB.
 
 Generally speaking, the steps are:
 
-1- Attach the problematic SATA disk to the working VMware VM, running Ubuntu 25.10.
+1- Attach the problematic SATA disk to the working VMware VM, running Ubuntu 24.04.
 
 2- Prepare the problematic SATA disk.
 
@@ -44,7 +44,7 @@ Generally speaking, the steps are:
 
 First thing first, disable the **Secure Boot** to achieve a smoother operation. 
 
-Better have a working Ubuntu 25.10 system handy. It's a Ubuntu 25.10 with macOS flavor for my case.
+Better have a working Ubuntu 24.04 system handy. It's a Ubuntu 24.04 with macOS flavor for my case.
 
 Run your VMware Workstations as Administrator; then add the Physical Disk (the whole disk) as a hard disk into the VM.
 
@@ -55,7 +55,7 @@ Run your VMware Workstations as Administrator; then add the Physical Disk (the w
 
 
 
-Once booted into the Ubuntu 25.10 with macOS flavor, the desktop is a as below:
+Once booted into the Ubuntu 24.04 with macOS flavor, the desktop is a as below:
 
 ![desktop](./assets/img-01-sda-desktop.png)
 
@@ -67,7 +67,7 @@ It seems that the `/dev/sdb` has quite some issues. anyway we are gonna format i
 
 
 
-## Prepare the problematic SATA disk
+## 1- Prepare the problematic SATA disk
 
 ```shell
 ## Install fat32 supporting mtools
@@ -172,9 +172,9 @@ Then format the partitions:
 
 ```shell
 ## Format the partitions
-sudo mkfs.fat -F 32 /dev/sdb1
+sudo mkfs.fat -F32 /dev/sdb1
 sudo mkfs.ext4 /dev/sdb2
-sudo mkfs.fat -F 32 /dev/sdb3    ## This takes a while as it's a 1.3TB partition.
+sudo mkfs.fat -F32 /dev/sdb3    ## This takes a while as it's a 1.3TB partition.
 ```
 
 The operations above can be viewed in a snapshot as below:
@@ -183,27 +183,53 @@ The operations above can be viewed in a snapshot as below:
 
 
 
-## Copy the OS-Data Partition
+## 2- Copy the `root` Partition
 
-Assuming the OS and Data are all installed at the root filesystem (`/`) at `/dev/sdb2`. If not on one partition, so the same for other partitions.
+> [!IMPORTANT]
+>
+> 1- To move a root partition to another disk using `dd`, you must boot from a live environment, identify the source and destination partitions, and then use `dd` to copy the data. 
+>
+> 2- After the copy, update the new partition's `/etc/fstab` file with the new UUIDs and reinstall the bootloader to make the new drive bootable. 
+>
+> 3- While `dd` can create an exact block-by-block copy, it can be dangerous and is best for partitions of the same size; for different sizes or a safer method, using `rsync` after creating a new filesystem is recommended. 
 
-#### a) Copy the OS+Data on /dev/sda2 to /dev/sdb2
+**Boot the system with a Live DVD/ISO of Ubuntu Linux 24.04**.
+
+Assuming the OS and Data are all installed at the root partition (`/`) at `/dev/sdb2`. If not on one partition, so the same for other partitions.
+
+#### 2a) Hardcopy the root partitions using `dd` command
+
+Use this method only if the destination partition is at least the same size as the source partition.
 
 ```shell 
 ## Ensure the disks and partitions
 lsblk
 ## Copy OS+App+Data partition from the working disk /dev/sda2 to /dev/sdb2
-sudo dd if=/dev/sda2 of=/dev/sdb2 bs=4M
+sudo dd if=/dev/sda2 of=/dev/sdb2 bs=4M conv=noerror,sync status=progress
 ## Check the UUID
 sudo blkid
 ```
 
-As we all know, after `dd` operations, `blkid` reports that `/dev/sda2` and `/dev/sdb2` have same UUID. That's what DD does, no surprise! But having 2 identical UUID is dangerous for the file system management. This is file system UUID, not partition UUID.
-Since it's filesystem UUID, filesystem specific utils are needed to change the UUID, or use `hexeditor` to modify raw data on disk (DANGEROUS, not recommended unless you know what you are doing).
+`conv=noerror,sync` tells `dd` to continue if it encounters errors and to pad with zeros if it reads fewer bytes than requested
+
+This method is great only if -
+
+​	(1) the source and destination are in same size and 
+
+​	(2) the source and destination are going to used in the same hardware env.
+
+**Resize the new root partition:**
+
+If the destination partition is larger, you'll need to resize the filesystem to use the extra space (with `resize2fs` for ext4, or using GParted).
+
+**Update the UUID of new root partition:** 
+
+As we all know, after `dd` operations, `blkid` reports that `/dev/sda2` and `/dev/sdb2` have same filesystem UUID. That's what DD does, no surprise! We need to generate a new UUID for the new `root` partition:
 
 ```shell
 ## For ext-family filesystem
 sudo tune2fs -U random /dev/sdb2
+
 ## For btrfs filesystem
 sudo btrfs -U $(uuidgen) /dev/sdb2
 sudo btrfstune -U 0de6bd81-7013-49a8-bdc5-d832ed209d2c /dev/sdb2
@@ -211,34 +237,28 @@ sudo btrfstune -U 0de6bd81-7013-49a8-bdc5-d832ed209d2c /dev/sdb2
 sudo ntfslabel --new-serial=1122334455667788 /dev/sdb3
 ```
 
-Updating the UUID of FAT / exFAT file system is a more complicated process. Here is the detailed steps to modify raw data on disk using `hexedit`.
 
-1. `blkid`, write down the UUID of filesystem to paper, or remember it. The UUID string of FAT / exFAT looks like `1122-3344`, UUID string of NTFS looks like `1122334455667788`.
 
-2. Open partition device using `hexedit`.
+#### 2b) Synchronize the root partitions using `rsync` command (Recommended)
 
-   `hexedit /dev/sdb1`
-
-3. Press /, enter the UUID in reverse order (if `blkid` reported `1234-ABCD`, then search `CDAB3412`) to search the UUID data on disk.
-
-4. Once UUID is located, change them, press `F2` to save and exit.
-
-5. `blkid` to verify the UUID.
-
-6. Once UUID is modified, you may need to update `grub.cfg` and/or `fstab` so that you can boot successfully next time.
-
-7. Execute `fsck <partition device such as /dev/sda1>` and see a *"There are differences between boot sector and its backup"* message. In order to solve it, select *"1) Copy original to backup"*, and if you are asked *"Perform changes ? (y/n)"* you press `y`.
-
-#### b) Use `GParted` app to check the `/dev/sdb2` partition, correcting the errors
+This file-level copy method is safer and handles different partition sizes better.
 
 ```shell
-## run fsck optionally
-sudo fsck.ext4 -f /dev/sdb2
+## Mount the source and destination partitions
+sudo mkdir /mnt/{src,dst}
+sudo mount /dev/sda2 /mnt/src
+sudo mount /dev/sdb2 /mnt/dst
+## Copy files while preserving permissions, ownership, and timestamps, and excluding virtual folders
+sudo rsync -aXS --info=progress2 --exclude={/dev/*,/proc/*,/sys/*,/run/*,/tmp/*,/lost+found/*,/mnt/*, /media/*} /mnt/src/ /mnt/dst/
+## Umount and remove all
+sudo umount -R /mnt/src
+sudo umount -R /mnt/dst
+sudo rmdir /mnt/{src,dst}
 ```
 
 
 
-## Create the GRUB2 bootloader
+## 4- Update `/etc/fstab` on the root partition
 
 Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration from `/dev/sda`.
 
@@ -248,71 +268,46 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
   lsblk
   ```
 
-  The output belike:
-
-  ```text
-  ......
-  sda		8:0		0	  128G	0	disk
-  |-sda1	8:1		0		1G	0	part /boot/efi
-  |-sda2	8:2		0	  127G	0	part /
-  sdb		8:16	0	  1.8T	0	disk
-  |-sdb1	8:17	0	 1023M	0	part
-  |-sdb2	8:18	0	  500G	0	part
-  |-sdb3	8:19	0	  1.3T	0	part
-  ......
-  ```
-
-  grab the UUID of the 2 disks:
+  Grab the UUID of the new disk (`/dev/sdb`):
 
   ```shell
-  sudo blkid
+  sudo blkid /dev/sdb
   ```
-
-  The output belike:
-
-  ```shell
-  /dev/sda1: UUID="DE5B-E306" BLOCK_SIZE="512" TYPE="vfat" PARTLABEL="efi" PARTUUID="44683ae3-1ff3-42d4-a059-01884a92de8a"
-  /dev/sda2: UUID="bf044976-c0c6-4fcf-822f-085c98009ead" BLOCK_SIZE="4096" TYPE="ext4" PARTLABEL="system" PARTUUID="4a84ae9b-f248-4eac-90e9-df1ab4a78f39"
   
-  /dev/sdb1: UUID="EDF6-7165" BLOCK_SIZE="512" TYPE="vfat" PARTLABEL="efi" PARTUUID="2d9d0d58-......"
-  /dev/sdb2: UUID="2404556e-e7de-48fb-a07f-5e81b99ca105" BLOCK_SIZE="4096" TYPE="ext4" PARTLABEL="system" PARTUUID="0b63ab5b-298b-4b5f-ac3e-e8c79e8fb391"
+  The output belike:
+  
+  ```shell
+  /dev/sdb1: UUID="8E55-11E4" BLOCK_SIZE="512" TYPE="vfat" PARTLABEL="efi" PARTUUID="2d9d0d58-......"
+  /dev/sdb2: UUID="2404556e-e7de-48fb-a07f-5e81b99ca105" BLOCK_SIZE="4096" TYPE="ext4" PARTLABEL="system" PARTUUID="0b63ab5b-......"
   /dev/sdb3: UUID="9246-66F3" BLOCK_SIZE="512" TYPE="vfat" PARTLABEL="DATA" PARTUUID="5f29337b-......"
   ```
 
   
 
-- Mount the data and root partition from `/dev/sdb` to `/mnt`:
+- Mount the  root partition from `/dev/sdb2` to `/mnt`, and mount `/dev/sdb1` to `/mnt/boot/efi`:
 
   ```shell
   ## Mounting
   sudo mount /dev/sdb2 /mnt
   sudo mount /dev/sdb1 /mnt/boot/efi
-  
-  ## Empty folder /boot/efi so far
-  ls /mnt/boot/efi 
   ```
-
+  
   
 
 * Edit `/etc/fstab` file of `/dev/sdb2`:
 
   ```shell
-  sudo blkid /dev/sdb1
-  ## UUID of /dev/sdb1: EDF6-7165
-  sudo blkid /dev/sdb2
-  ## UUID of /dev/sdb2: 2404556e-e7de-48fb-a07f-5e81b99ca105
-  
   sudo nano /mnt/etc/fstab
   ```
   
-  Update the content of `/mnt/etc/fstab` beliking:
+  Update the content of `fstab` :
   
   ```shell
   # <File system> <mount point>   <type>  <options>     <dump> <pass>
   # / was on /dev/sda2 during curtin installation
   /dev/disk/by-uuid/2404556e-e7de-48fb-a07f-5e81b99ca105 / ext4 defaults 0 1
   # /boot/efi was on /dev/sda1 during curtin installation
-  /dev/disk/by-uuid/EDF6-7165 /boot/efi vfat defaults 0 1
+  /dev/disk/by-uuid/8E55-11E4 /boot/efi vfat defaults 0 1
   /swap.img	    none	swap	sw	0	0
   ```
   
@@ -321,13 +316,18 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
 
 
 
+## 5- Create the GRUB2 bootloader
+
 * Bind mount necessary system directories from the local running `/dev/sda` to `/mnt`.
 
   ```shell
   sudo mount --rbind /dev /mnt/dev
+  sudo mount --rbind /dev/pts /mnt/dev/pts
   sudo mount --rbind /proc /mnt/proc
   sudo mount --rbind /run /mnt/run
   sudo mount --rbind /sys /mnt/sys
+  
+  for i in dev dev/pts proc sys run; do sudo mount -R /$i /mnt/$i; done
   ```
 
 * Chroot into the mounted system.
@@ -350,8 +350,8 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
 
   ```shell
   grub-install /dev/sdb
-  ## Otherwise specify the parameters as below:
-  ## grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Ubuntu25 /dev/sdb
+  ## If error, specify the parameters as below:
+  grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Ubuntu25 /dev/sdb
   ```
   
   * It shall report:
@@ -366,7 +366,12 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
 * Update GRUB configuration.
 
   ```shell
+  ## optional: Update initRamFS
+  update-initramfs -u
+  
+  ## Update grub.cfg
   update-grub
+  
   ## One warning may occur, which doesn't affect anything, no worry.
   ## Warning: os-prober will not be added to the GRUB boot configuration.
   ```
@@ -379,20 +384,10 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
 
   
 
-* (Option) Check the folder of `/mnt/boot/efi`, which shall have a `EFI` folder now. And the `EFI` folder shall embrace 2 sub-folders: `BOOT` and `ubuntu`.
-
-  ```shell
-  ls /mnt/boot/efi
-  ## EFI
-  ls /mnt/boot/efi/EFI
-  ## BOOT ubuntu
-  ```
-
-  
-
 * Unmount the filesystems.
 
   ```shell
+  sudo umount -R /mnt/boot/efi
   sudo umount -R /mnt
   ```
 
