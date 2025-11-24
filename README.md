@@ -28,15 +28,21 @@ Case 2: **[Install Ubuntu 25.10 via Partition Cloning](./Install-Ubuntu-25.10-vi
 
 
 
-## GRUB2 Command Shell - Quick Start
+## GRUB2 Command Shell
 
-1- **[Rescue a non-booting GRUB2 on Linux](./quick-starts/Rescue-a-non-booting-GRUB2-on-Linux.md)**
+1- **[Rescue a non-booting GRUB2 on Linux](./command-shell/Rescue-a-non-booting-GRUB2-on-Linux.md)**
 
-2- **[Use GRUB2 Command Line to Boot up](./quick-starts/Use-GRUB2-Command-Line-to-Boot-up.md)**
+2- **[Use GRUB2 Command Line to Boot up](./command-shell/Use-GRUB2-Command-Line-to-Boot-up.md)**
 
-3- **[How to Rescue or Reinstall Grub - the Manual Way](./quick-starts/How-to-Rescue-or-Reinstall-GRUB-the-Manual-Way.md)**
+3- **[How to Rescue or Reinstall Grub - the Manual Way](./command-shell/How-to-Rescue-or-Reinstall-GRUB-the-Manual-Way.md)**
 
-4- **[Fix Ubuntu Not Booting Issue with Boot Repair tool](./quick-starts/Fix-Ubuntu-Not-Booting-with-Boot-Repair.md)**
+4- **[Fix Ubuntu Not Booting Issue with Boot Repair tool](./command-shell/Fix-Ubuntu-Not-Booting-with-Boot-Repair.md)**
+
+
+
+## kernel manipulated
+
+1- [Update Kernel for Ubuntu 22.04](./kernel/Update-Kernel-for-Ubuntu-22.04.md)
 
 
 

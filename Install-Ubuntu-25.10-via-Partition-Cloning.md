@@ -131,8 +131,8 @@ Then make partitions:
 ## make partitions in the env of (parted):
 mkpart "efi" fat32 1MiB 1024MiB
 set 1 esp on
-mkpart "system" ext4 1024MiB 501GiB
-mkpart "DATA" fat32 501GiB 100%
+mkpart "system" ext4 1025MiB 501GiB
+mkpart "DATA" fat32 502GiB 100%
 print
 ```
 
@@ -143,7 +143,7 @@ The output belike:
 Number	Start	End		Size	File system	Name	Flags
  1		1049KB	1074MB	1073MB				efi		boot, esp
  2		1074MB	538GB	537GB	ext4		system	
- 3		538GB	2000GB	1462GB	fat32		DATA	msftdata
+ 3		539GB	2000GB	1462GB	fat32		DATA	msftdata
 ```
 
 Then quit the (parted) env and format the partitions:
@@ -305,10 +305,10 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
   ```shell
   # <File system> <mount point>   <type>  <options>     <dump> <pass>
   # / was on /dev/sda2 during curtin installation
-  /dev/disk/by-uuid/2404556e-e7de-48fb-a07f-5e81b99ca105 / ext4 defaults 0 1
+  /dev/disk/by-uuid/ad197ec0-5e3d-4128-a0b2-e525c471b1b2 / ext4 defaults 0 1
   # /boot/efi was on /dev/sda1 during curtin installation
-  /dev/disk/by-uuid/8E55-11E4 /boot/efi vfat defaults 0 1
-  /swap.img	    none	swap	sw	0	0
+  /dev/disk/by-uuid/970D-8713 /boot/efi vfat defaults 0 1
+  /swapfile	    none	swap	sw	0	0
   ```
   
   Save the change!
@@ -351,7 +351,7 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
   ```shell
   grub-install /dev/sdb
   ## If error, specify the parameters as below:
-  grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=Ubuntu25 /dev/sdb
+  grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu /dev/sdb
   ```
   
   * It shall report:

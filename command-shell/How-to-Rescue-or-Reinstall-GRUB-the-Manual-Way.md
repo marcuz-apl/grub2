@@ -8,7 +8,7 @@ Video: https://www.youtube.com/watch?v=ZhxBJ3yh2OY
 
 
 
-Say you have a corrupt ubuntu system or any Linux system, To mimic this, I am going to use a VM to showcase this.
+Say you have a corrupt ubuntu system or any Linux system, To mimic this, I am going to use a VM to showcase this. 
 
 
 
@@ -26,6 +26,8 @@ As such, the `/boot/grub` folder is gone and it will enter into a console of `Gr
 
 ## Fix the grub issues
 
+Boot the system with a live DVD/ISO of Linux system
+
 ```shell
 sudo fdisk -l
 ```
@@ -33,24 +35,26 @@ sudo fdisk -l
 you should have `/sda1`, `/sda2` and `/sda3` as below:
 
 ```text
-Device		Start		End		Sectors	Size	Type	
-/dev/sda1	2048		4095	   2048	  1M	BIOS boot
-/dev/sda2	4096  1049573951 1048569856	500G	Linux filesystem
---- or ---
-Device		Start		  End	 Sectors	Size	Type	
-/dev/sda1	 2048	     4095	    2048	  1M	BIOS boot
-/dev/sda2    4096	  1028096	 1024000      1G	EFI partition
-/dev/sda2 1028096  1049573951 1048569856	500G	Linux filesystem
+Disk /dev/sda: 200 GiB, 21474836800 bytes, 419430400 sectors
+Device		   Start		 End	Sectors	Size	Type	
+/dev/sda1		2048	 2000895	1998848	976M	EFI System
+/dev/sda2	 2000896   419428351  417427456	199G	Linux filesystem
+
+Disk /dev/sdb: 1.82 TiB, 2000398934016 bytes, 3907029168 sectors
+Device		   Start		 End	Sectors	Size	Type	
+/dev/sdb1	 	2048	 1050623	1048576	512M	EFI System
+/dev/sdb2 	 1050624  1049626623 1048576000 500G	Linux filesystem
+/dev/sdb3 1049626624  3907028991 2857402368	1.3T	Microsoft basic data
 ```
 
 let's get started.
 
 ```shell
 ## Then mount the partitions
-sudo mount /dev/sda3 /mnt
-sudo mount /dev/sda2 /mnt/boot/efi
+sudo mount /dev/sdb2 /mnt
+sudo mount /dev/sdb1 /mnt/boot/efi
 ## Install grub2
-sudo grub-install --root-directory=/mnt /dev/sda
+sudo grub-install --root-directory=/mnt /dev/sdb
 ## reboot
 reboot
 ```

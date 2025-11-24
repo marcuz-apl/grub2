@@ -87,8 +87,8 @@ mkpart "system" ext4 1024MiB 100%
 quit
 
 ## Format the partitions
-sudo mkfs.fat -F 32 /dev/sdc1
-sudo mkfs.ext4 /dev/sdc2
+sudo mkfs.fat -F 32 /dev/sdb1
+sudo mkfs.ext4 /dev/sdb2
 ```
 
 #### b) Copy the OS+Data on /dev/sdb2 to /dev/sdc2
