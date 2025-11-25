@@ -6,14 +6,14 @@ by macuz-apl | 18 November 2025
 
 ## Kernel Versions of Ubuntu 22.04
 
-| Ubuntu release | Kernel version | Kernal name                    |
-| -------------- | -------------- | ------------------------------ |
-| 22.04          | 5.15 (GA)      | linux-image-5.15.0-161-generic |
-| 22.04.2        | 5.19 (HWE)     | linux-image-5.19.0-41-generic  |
-| 22.04.3        | 6.2 (HWE)      | linux-image-6.2.0-26-generic   |
-| 22.04.4        | 6.5 (HWE)      | linux-image-6.5.0-15-generic   |
-| 22.04.5        | 6.8 (HWE)      | linux-image-6.8.0-40-generic   |
-| 22.04.x        | latest         | linux-generic-hwe-22.04        |
+| Ubuntu release | Kernel version        | Kernal name                    |
+| -------------- | --------------------- | ------------------------------ |
+| 22.04          | 5.15 (GA)             | linux-image-5.15.0-161-generic |
+| 22.04.2        | 5.15 (GA), 5.19 (HWE) | linux-image-5.19.0-41-generic  |
+| 22.04.3        | 5.15 (GA), 6.2 (HWE)  | linux-image-6.2.0-26-generic   |
+| 22.04.4        | 5.15 (GA), 6.5 (HWE)  | linux-image-6.5.0-15-generic   |
+| 22.04.5        | 5.15 (GA), 6.8 (HWE)  | linux-image-6.8.0-40-generic   |
+| 22.04.x        | latest                | linux-generic-hwe-22.04        |
 
 
 
@@ -23,7 +23,7 @@ by macuz-apl | 18 November 2025
 | -------------- | -------------------- | ----------------------------- |
 | 24.04          | 6.8 (GA)             | linux-image-6.8.0-87-generic  |
 | 24.04.2        | 6.8 (GA), 6.11 (HWE) | linux-image-6.11.0-40-generic |
-| 24.04.3        | 6.8 (GA), 6.14 (HWE) | linux-image-6.14.0-29-generic |
+| 24.04.3        | 6.8 (GA), 6.14 (HWE) | linux-image-6.14.0-36-generic |
 
 ** GA = General Availability
 
@@ -33,11 +33,11 @@ by macuz-apl | 18 November 2025
 
 ## Kernel Versions of Debian 12/13
 
-| Debian release | Kernel version | Kernel name                  |
-| -------------- | -------------- | ---------------------------- |
-| 12.1           | 6.1 (GA)       | linux-image-6.1.0-10-generic |
-| 12.9           | 6.1            | linux-image-6.1.0-29-generic |
-| 13.2           | 6.12           | linux-image-6.12.57-deb13    |
+| Debian release | Kernel version | Kernel name                |
+| -------------- | -------------- | -------------------------- |
+| 12.1           | 6.1 (GA)       | linux-image-6.1.0-10-amd64 |
+| 12.9           | 6.1            | linux-image-6.1.0-29-amd64 |
+| 13.2           | 6.12           | linux-image-6.12.57-deb13  |
 
 
 
