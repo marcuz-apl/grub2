@@ -1,4 +1,4 @@
-# Rescue or Reinstall GRUB - the Manual Way
+# Rescue or Reinstall GRUB2 - the Manual Way
 
 by Drew Howden Tech
 
@@ -8,13 +8,13 @@ Video: https://www.youtube.com/watch?v=ZhxBJ3yh2OY
 
 
 
-Say you have a corrupt ubuntu system or any Linux system, To mimic this, I am going to use a VM to showcase this. 
+Say you have a corrupt Ubuntu system or any Linux system, to mimic this, I am going to use a VM to showcase this. 
 
 
 
 ## Environment mimicking
 
-Login to a Linux system and launch a terminal
+Login to a Ubuntu Linux system and launch a terminal
 
 ```shell
 sudo rm -rf /boot/grub
@@ -50,11 +50,14 @@ Device		   Start		 End	Sectors	Size	Type
 let's get started.
 
 ```shell
-## Then mount the partitions
+## Then mount the root and the EFI partitions:
 sudo mount /dev/sdb2 /mnt
 sudo mount /dev/sdb1 /mnt/boot/efi
 ## Install grub2
-sudo grub-install --root-directory=/mnt /dev/sdb
+sudo chroot /mnt
+#### Ops in the `chroot` env
+grub-install --root-directory=/boot /dev/sdb
+exit
 ## reboot
 reboot
 ```
@@ -75,7 +78,7 @@ set root=(hd0,gpt3)
 ls /
 
 ## Specify the vmlinuz and the init
-linux /boot/vmlinuz	root=/dev/sda3    ## Use tab key to find options of vmlinux
+linux /boot/vmlinuz	root=/dev/sda3    ## Use tab key to find options of vmlinuz
 initrd /boot/initrd.img               ## USe tab key to find options of initrd
 ## Boot the root system
 boot

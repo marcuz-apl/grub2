@@ -1,4 +1,4 @@
-# Rescue a Non-booting GRUB2 on Linux
+# Rescue a Non-booting GRUB2 on Ubuntu 14.04
 
 ###### The Linux Foundation | 20 March 2022
 
@@ -77,7 +77,7 @@ grub> boot
 
 The 1st line sets the partition that the root filesystem is on. 
 
-The 2nd line tells GRUB the location of the kernel you want to use. Start typing `/boot/vmli`, and then use tab-completion to fill in the rest. Type `root=/dev/sd*X*` to set the location of the root filesystem. Yes, this seems redundant, but if you leave this out you’ll get a kernel panic. How do you know the correct partition? hd0,1 = /dev/sda1. hd1,1 = /dev/sdb1. hd3,2 = /dev/sdd2. I think you can extrapolate the rest.
+The 2nd line tells GRUB the location of the kernel you want to use. Start typing `/boot/vmlinuz`, and then use tab-completion to fill in the rest. Type `root=/dev/sd*X*` to set the location of the root filesystem. Yes, this seems redundant, but if you leave this out you’ll get a kernel panic. How do you know the correct partition? hd0,1 = /dev/sda1; hd1,1 = /dev/sdb1; hd3,2 = /dev/sdd2. I think you can extrapolate the rest.
 
 The 3rd line sets the `initrd` file, which must be the same version number as the kernel.
 

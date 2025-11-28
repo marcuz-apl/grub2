@@ -4,8 +4,6 @@ by Marcuz-Apl
 
 
 
-# Operations on Grub
-
 ## 1- Configure the Grub timeout
 
 To change the GRUB menu timeout, open a terminal and edit the `/etc/default/grub` file using `sudoedit /etc/default/grub` or `sudo nano /etc/default/grub`. Find the `GRUB_TIMEOUT=` line and change the value to your desired number of seconds (e.g., `GRUB_TIMEOUT=10`), set it to `0` to boot immediately, or `-1` to wait indefinitely. Save the file and run `sudo update-grub` to apply the changes. 

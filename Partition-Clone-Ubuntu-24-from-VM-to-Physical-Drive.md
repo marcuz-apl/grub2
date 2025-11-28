@@ -1,4 +1,4 @@
-# Install Ubuntu 24.04 via Partition Cloning
+# Partition-Clone Ubuntu 24 from VM to Physical Drive
 
 by marcuz-apl | 10 November 2025
 
@@ -197,7 +197,7 @@ The operations above can be viewed in a snapshot as below:
 
 Assuming the OS and Data are all installed at the root partition (`/`) at `/dev/sdb2`. If not on one partition, so the same for other partitions.
 
-#### 2a) Hardcopy the root partitions using `dd` command
+#### 2a) Hardcopy the root partitions using `dd` command (Not Recommended)
 
 Use this method only if the destination partition is at least the same size as the source partition.
 
@@ -326,8 +326,8 @@ Now we are gonna create a GRUB bootloader on `/dev/sdb` using the configuration 
   sudo mount --rbind /proc /mnt/proc
   sudo mount --rbind /run /mnt/run
   sudo mount --rbind /sys /mnt/sys
-  
-  for i in dev dev/pts proc sys run; do sudo mount -R /$i /mnt/$i; done
+  ## Or a simple script as below
+  # for i in dev dev/pts proc sys run; do sudo mount -R /$i /mnt/$i; done
   ```
 
 * Chroot into the mounted system.

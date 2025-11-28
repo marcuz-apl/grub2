@@ -1,4 +1,4 @@
-# Rebuild the Grub2 Bootloader
+# Everything About Grub2 and Linux Kernel
 
 by marcuz-apl | 24 Oct 2025
 
@@ -6,15 +6,15 @@ by marcuz-apl | 24 Oct 2025
 
 ## Intro
 
-I met a situation, that one of my Ubuntu Workstations was down due to failure of its EFI Partition, while the data partition of OS, apps, projects was still okay (accessible from other OS, if sharing out).
+I met a situation, that one of my Ubuntu Workstations was down due to failure of its EFI Partition, while the `root` partition of OS, apps, projects was still okay, accessible from other OS, if shared.
 
 Then I have to bring up a new SATA disk and copy the data partition over and rebuild a grub bootloader for the new disk.
 
 I didn't make any complex partition table for those old Ubuntu stations, pretty much 2 partitions for every workstations:
 
-​	`/dev/sda1` - mounting point: `/boot/efi` - in `vfat` file system
+​	`/dev/sda1` - EFI partition: `/boot/efi` - in `vfat` file system
 
-​	`/dev/sda2` - mounting point: `/` - in `ext4` file system
+​	`/dev/sda2` - root partition: `/` - in `ext4` file system
 
 This simple partition table scheme, without the `lvm`, saves a lot of time sometimes.
 
@@ -22,23 +22,25 @@ This simple partition table scheme, without the `lvm`, saves a lot of time somet
 
 ## Case Studies with Step-by-Step Guide
 
-Case 1: **[Migrate a Legacy BIOS Linux System to UEFI Scheme in VM](./Migrate-a-Legacy-BIOS-Linux-System-to-UEFI-Scheme-in-VM.md)**
+Case 1: [Migrate a Legacy BIOS Linux System to UEFI Scheme in VM](./Migrate-a-Legacy-BIOS-Linux-System-to-UEFI-Scheme-in-VM.md)
 
-Case 2: **[Install Ubuntu 25.10 via Partition Cloning](./Install-Ubuntu-25.10-via-Partition-Cloning.md)**
+Case 2: [Partition-Clone Ubuntu 24 from VM to Physical Drive](./Partition-Clone-Ubuntu-24-from-VM-to-Physical-Drive.md)
+
+Case 2: [Partition-Clone Debian 12 from VM to Physical Drive](./Partition-Clone-Debian-12-from-VM-to-Physical-Drive.md)
 
 
 
 ## GRUB2 Command Shell
 
-1- [Rescue a non-booting GRUB2 on Linux](./command-shell/Rescue-a-non-booting-GRUB2-on-Linux.md)
+1- [Fix Ubuntu Not Booting Issue with Boot Repair tool](./command-shell/Fix-Ubuntu-Not-Booting-with-Boot-Repair.md)
 
-2- [Use GRUB2 Command Line to Boot up](./command-shell/Use-GRUB2-Command-Line-to-Boot-up.md)
+2- [Operations on Grub](./command-shell/Operations-on-Grub.md)
 
-3- [Rescue or Reinstall Grub - the Manual Way](./command-shell/Rescue-or-Reinstall-GRUB-the-Manual-Way.md)
+3- [Rescue a non-booting GRUB2 on Ubuntu 14.04](./command-shell/Rescue-a-non-booting-GRUB2-on-Ubuntu-14.md)
 
-4- [Fix Ubuntu Not Booting Issue with Boot Repair tool](./command-shell/Fix-Ubuntu-Not-Booting-with-Boot-Repair.md)
+4- [Rescue or Reinstall GRUB2 - the Manual Way](./command-shell/Rescue-or-Reinstall-GRUB2-the-Manual-Way.md)
 
-5- [Operations on Grub](./command-shell/Operations-on-Grub.md)
+5- [Use GRUB2 Command Line to Boot up](./command-shell/Use-GRUB2-Command-Line-to-Boot-up.md)
 
 
 
