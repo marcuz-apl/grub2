@@ -228,6 +228,7 @@ This file-level copy method is safer and handles different partition sizes bette
 sudo mkdir /mnt/{src,dst}
 sudo mount /dev/sda2 /mnt/src
 sudo mount /dev/sdb2 /mnt/dst
+## sudo apt install rsync
 ## Copy files while preserving permissions, ownership, and timestamps, and excluding virtual folders
 sudo rsync -aAXv --info=progress2 --exclude={/dev/*,/proc/*,/sys/*,/run/*,/tmp/*,/mnt/*,/media/*,/swapfile} /mnt/src /mnt/dst
 ## Umount and remove all
