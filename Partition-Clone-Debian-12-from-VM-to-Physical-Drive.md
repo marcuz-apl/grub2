@@ -46,7 +46,9 @@ First thing first, disable the **Secure Boot** to achieve a smoother operation.
 
 Have a Live Debian 12.9 ISO handy.
 
-Run your VMware Workstations as Administrator; then add the Physical Disk (the whole disk) as a hard disk into the VM.
+**Run your VMware Workstations as Administrator**; 
+
+Then add the Physical Disk (the whole disk) as a hard disk into the VM.
 
 - The working Linux system on VM is ready as **/dev/sda** (200GB)
 
@@ -56,9 +58,9 @@ Run your VMware Workstations as Administrator; then add the Physical Disk (the w
   sudo apt remove --purge open-vm-tools open-vm-tools-desktop
   ```
 
-- The problematic SATA Disk is listed as **/dev/sdb** (1.8TB)
+- The physical SATA Disk is listed as **/dev/sdb** (1.8TB)
 
-Boot into the Live Debian 12.9 system.
+**Boot into the Live Debian 12.9 system.**
 
 
 
@@ -207,19 +209,15 @@ sudo mkfs.fat -F32 /dev/sdb3    ## This takes a while as it's a 1.3TB partition.
 
 > [!IMPORTANT]
 >
-> 1- To move a root partition to another disk using `dd`, you must boot from a live environment, identify the source and destination partitions, and then use `dd` to copy the data. 
->
-> 2- After the copy, update the new partition's `/etc/fstab` file with the new UUIDs and reinstall the bootloader to make the new drive bootable. 
->
-> 3- While `dd` can create an exact block-by-block copy, it can be dangerous and is best for partitions of the same size; for different sizes or a safer method, using `rsync` after creating a new filesystem is recommended. 
+> **Boot the system with a Live DVD/ISO of Debian 12.9 in the VMware**.
 
-**3A) Boot the system with a Live DVD/ISO of Debian 12.9**.
+
 
 Assuming the root partition (`/`) at `/dev/sdb3`. If not on one partition, so the same for other partitions.
 
 
 
-#### 3B) Synchronize the root partitions using `rsync` command (Recommended)
+#### Now, Let's synchronize the root partitions using `rsync` command (Recommended)
 
 This file-level copy method is safer and handles different partition sizes better.
 
@@ -228,9 +226,12 @@ This file-level copy method is safer and handles different partition sizes bette
 sudo mkdir /mnt/{src,dst}
 sudo mount /dev/sda2 /mnt/src
 sudo mount /dev/sdb2 /mnt/dst
+
 ## sudo apt install rsync
+
 ## Copy files while preserving permissions, ownership, and timestamps, and excluding virtual folders
-sudo rsync -aAXv --info=progress2 --exclude={/dev/*,/proc/*,/sys/*,/run/*,/tmp/*,/mnt/*,/media/*,/swapfile} /mnt/src /mnt/dst
+sudo rsync -aAXv --info=progress2 --exclude={/dev/*,/proc/*,/sys/*,/run/*,/tmp/*,/mnt/*,/media/*,/swapfile} /mnt/src/* /mnt/dst
+
 ## Umount and remove all
 sudo umount -R /mnt/src
 sudo umount -R /mnt/dst
@@ -243,7 +244,9 @@ sudo rmdir /mnt/{src,dst}
 
 > [!IMPORTANT]
 >
-> **Boot from a Live Debian 12.9 Environment:** Boot the physical machine using your Debian 12.9 Live USB again to perform system adjustments.
+> **Exit from the VMware system**.
+>
+> **Boot the system with a Live DVD/ISO of Debian 12.9** to perform system adjustments.
 
 * Mount necessary system directories from the local running `/dev/sdb` to `/mnt`.
 
